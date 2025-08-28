@@ -58,7 +58,6 @@ class _HomeScreenState extends State<HomeScreen> {
       } else {
         offset += limit;
         pokemons.addAll(data);
-        // se não estiver pesquisando, atualiza a lista visível
         if (!isSearching) {
           filteredPokemons = List<Pokemon>.from(pokemons);
         }
@@ -79,7 +78,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void searchPokemon(String raw) {
     final query = raw.toLowerCase().trim();
 
-    // quando limpa a busca, volta a mostrar o que já foi carregado
     if (query.isEmpty) {
       setState(() {
         isSearching = false;
@@ -88,7 +86,6 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }
 
-    // filtragem local, instantânea
     final results = pokemons
         .where((p) => p.name.toLowerCase().contains(query))
         .toList(growable: false);
@@ -108,12 +105,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildInitialLoaderOrContent() {
     if (isLoading && pokemons.isEmpty) {
-      // loading de tela cheia (primeiro carregamento)
       return const Center(child: CircularProgressIndicator());
     }
 
     if (hasError && pokemons.isEmpty) {
-      // erro no primeiro carregamento
       return Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -129,7 +124,6 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     }
 
-    // conteúdo normal
     if (filteredPokemons.isEmpty) {
       return const Center(child: Text('Nenhum Pokémon encontrado'));
     }
@@ -138,8 +132,8 @@ class _HomeScreenState extends State<HomeScreen> {
       controller: _scrollController,
       padding: const EdgeInsets.all(10),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 3 / 4,
+        crossAxisCount: 3,
+        childAspectRatio: 0.8,
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
       ),
