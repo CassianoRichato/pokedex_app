@@ -36,18 +36,6 @@ Um aplicativo móvel desenvolvido em **Flutter** que consome a **PokéAPI** para
 - **Tela de detalhes**
   - Habilidades, tipos, stats e animação com Hero
 
----
-
-## Demonstração
-
-> Substitua pelos seus GIFs ou screenshots
-
-![Lista de Pokémons](screenshots/lista.gif)  
-![Busca por Nome](screenshots/busca.gif)  
-![Detalhes do Pokémon](screenshots/detalhes.png)
-
----
-
 ## Estrutura do Projeto
 
 lib/
