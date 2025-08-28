@@ -50,9 +50,6 @@ lib/
 └─ widgets/
 └─ pokemon_tile.dart # Card de Pokémon com imagem maior
 
-yaml
-Copiar código
-
 ---
 
 ## Instalação e execução
