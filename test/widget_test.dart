@@ -6,7 +6,14 @@ void main() {
   testWidgets('App inicializa e exibe lista de Pokémon', (
     WidgetTester tester,
   ) async {
-    await tester.pumpWidget(const MaterialApp(home: HomeScreen()));
+    await tester.pumpWidget(
+      MaterialApp(
+        home: HomeScreen(
+          toggleTheme: () {}, // função dummy
+          isDarkMode: false, // valor inicial
+        ),
+      ),
+    );
 
     await tester.pumpAndSettle();
 
