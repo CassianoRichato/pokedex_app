@@ -5,33 +5,40 @@ import '../services/favorites_service.dart';
 
 class PokemonTile extends StatefulWidget {
   final Pokemon pokemon;
+  final FavoritesService favoritesService;
 
-  const PokemonTile({super.key, required this.pokemon});
+  const PokemonTile({
+    super.key,
+    required this.pokemon,
+    required this.favoritesService,
+  });
 
   @override
   State<PokemonTile> createState() => _PokemonTileState();
 }
 
 class _PokemonTileState extends State<PokemonTile> {
-  final FavoritesService _favoritesService = FavoritesService();
-  bool _isFavorite = false;
+  bool isFavorite = false;
 
   @override
   void initState() {
     super.initState();
-    _loadFavorite();
+    checkFavorite();
   }
 
-  Future<void> _loadFavorite() async {
-    bool fav = await _favoritesService.isFavorite(widget.pokemon.id);
+  Future<void> checkFavorite() async {
+    final fav = await widget.favoritesService.isFavorite(widget.pokemon.id);
     setState(() {
-      _isFavorite = fav;
+      isFavorite = fav;
     });
   }
 
-  Future<void> _toggleFavorite() async {
-    await _favoritesService.toggleFavorite(widget.pokemon.id);
-    _loadFavorite();
+  void toggleFavorite() async {
+    await widget.favoritesService.toggleFavorite(widget.pokemon.id);
+    final fav = await widget.favoritesService.isFavorite(widget.pokemon.id);
+    setState(() {
+      isFavorite = fav;
+    });
   }
 
   @override
@@ -39,36 +46,44 @@ class _PokemonTileState extends State<PokemonTile> {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       elevation: 4,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: Stack(
         children: [
-          Hero(
-            tag: 'pokemon_${widget.pokemon.id}',
-            child: CachedNetworkImage(
-              imageUrl: widget.pokemon.imageUrl,
-              height: 120,
-              width: 120,
-              fit: BoxFit.contain,
-              placeholder: (_, __) => const CircularProgressIndicator(),
-              errorWidget: (_, __, ___) => const Icon(Icons.error),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Hero(
+                tag: 'pokemon_${widget.pokemon.id}',
+                child: CachedNetworkImage(
+                  imageUrl: widget.pokemon.imageUrl,
+                  height: 120,
+                  width: 120,
+                  fit: BoxFit.contain,
+                  placeholder: (_, __) => const CircularProgressIndicator(),
+                  errorWidget: (_, __, ___) => const Icon(Icons.error),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                '#${widget.pokemon.id}',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                widget.pokemon.displayName,
+                style: const TextStyle(fontSize: 16),
+              ),
+            ],
+          ),
+          Positioned(
+            top: 5,
+            right: 5,
+            child: IconButton(
+              icon: Icon(
+                isFavorite ? Icons.favorite : Icons.favorite_border,
+                color: Colors.red,
+              ),
+              onPressed: toggleFavorite,
             ),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            '#${widget.pokemon.id}',
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 5),
-          Text(
-            widget.pokemon.displayName,
-            style: const TextStyle(fontSize: 16),
-          ),
-          IconButton(
-            icon: Icon(
-              _isFavorite ? Icons.favorite : Icons.favorite_border,
-              color: Colors.red,
-            ),
-            onPressed: _toggleFavorite,
           ),
         ],
       ),
