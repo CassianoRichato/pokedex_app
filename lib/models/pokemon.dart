@@ -5,6 +5,8 @@ class Pokemon {
   final List<String> types;
   final List<String> abilities;
   final Map<String, int> stats;
+  final List<int> evolutions;
+  bool? isCaptured;
 
   Pokemon({
     required this.id,
@@ -13,9 +15,12 @@ class Pokemon {
     this.types = const [],
     this.abilities = const [],
     this.stats = const {},
+    this.evolutions = const [],
+    this.isCaptured,
   });
 
-  String get displayName => name[0].toUpperCase() + name.substring(1);
+  String get displayName =>
+      name.isNotEmpty ? '${name[0].toUpperCase()}${name.substring(1)}' : name;
 
   factory Pokemon.fromJson(Map<String, dynamic> json) {
     return Pokemon(
@@ -40,6 +45,8 @@ class Pokemon {
             ) ??
             [],
       ),
+      evolutions: [],
+      isCaptured: false,
     );
   }
 }
